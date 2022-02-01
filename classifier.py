@@ -5,6 +5,16 @@ import time
 import cv2
 import numpy as np
 from tensorflow import keras
+import flirimageextractor
+
+temp_min = 162
+temp_max = 250
+flir = flirimageextractor.FlirImageExtractor()
+
+
+def process_and_save_images(image_path):
+    flir.process_image(image_path, RGB=True)
+    flir.save_images(minTemp=temp_min, maxTemp=temp_max)
 
 
 def get_latest_image(dirpath, valid_extensions=('jpg', 'jpeg', 'png')):
@@ -42,6 +52,7 @@ def scheduler(sc):
 
 
 if __name__ == '__main__':
+    print('Program starts')
     s = sched.scheduler(time.time, time.sleep)
-    s.enter(35, 1, scheduler, (s,))
+    s.enter(1, 1, scheduler, (s,))
     s.run()
